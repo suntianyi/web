@@ -1,0 +1,15 @@
+spring:
+  zookeeper:
+    host: localhost:2181
+    timeout: 5000
+    prefixPath: /node/web3/
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/study
+    username: zhsun5
+    password: 123456
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  config-location: classpath:mybatis-config.xml
+  type-aliases-package: com.sun.demo.mybatis.entity
