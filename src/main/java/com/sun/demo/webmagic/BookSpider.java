@@ -13,8 +13,8 @@ import java.io.PrintWriter;
 public class BookSpider {
     public static void main(String[] args) {
         Spider.create(new BookPageProcessor())
-                .addUrl("https://www.xxbiquge.com/77_77268/336801.html")
-                .addPipeline(new BookPipeline("剑来"))
+                .addUrl("https://www.xxbiquge.com/0_62/5280954.html")
+                .addPipeline(new BookPipeline("惊悚乐园"))
                 .run();
     }
 }
