@@ -4,6 +4,8 @@ import org.apache.http.util.TextUtils;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @auther zhsun5@iflytek.com
@@ -11,11 +13,21 @@ import java.nio.channels.FileChannel;
  */
 public class FileUtil {
     public static void main(String[] args) {
-        String path = "D:/trash";
-        String fileName = "小说.txt";
-        File file = new File(path);
-        String[] files = file.list((dir, name) -> name.endsWith(".download"));
-        mergeFiles(path, files, fileName);
+//        String path = "D:/trash";
+//        String fileName = "小说.txt";
+//        File file = new File(path);
+//        String[] files = file.list((dir, name) -> name.endsWith(".download"));
+//        mergeFiles(path, files, fileName);
+
+        String path = "D:/音乐/";
+        String file1 = path + "4 Non Blondes - What's Up.mp3";
+        String file2 = path + "S9ryne - 命.mp3";
+        String file3 = path + "群星 - 我在那一角落患过伤风(钢琴版).mp3";
+        ArrayList<String> list = new ArrayList<>();
+        list.add(file1);
+        list.add(file2);
+        list.add(file3);
+        ZipUtils.zipFiles(list, path + "音乐.zip");
     }
 
     private static void deleteFiles(String path, String[] files) {
