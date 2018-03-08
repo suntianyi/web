@@ -98,8 +98,8 @@ public class HttpClient {
     }
 
     public static String sendPost(String url, String json) {
-        String result = "";
-        BufferedReader reader = null;
+        BufferedReader in = null;
+        StringBuilder result = new StringBuilder();
         try {
             URL realUrl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
@@ -117,24 +117,25 @@ public class HttpClient {
             outwritestream.write(json.getBytes());
             outwritestream.flush();
             outwritestream.close();
-            if (conn.getResponseCode() == 200) {
-                reader = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream()));
-                result = reader.readLine();
+            in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result.append(line);
             }
         } catch (Exception e) {
             System.out.println("发送 POST 请求出现异常！" + e);
             e.printStackTrace();
         } finally {
-            if (reader != null) {
+            if (in != null) {
                 try {
-                    reader.close();
+                    in.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        return result;
+        return result.toString();
     }
 
 
