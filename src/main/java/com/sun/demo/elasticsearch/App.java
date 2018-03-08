@@ -2,6 +2,7 @@ package com.sun.demo.elasticsearch;
 
 import com.sun.demo.elasticsearch.entity.Account;
 import com.sun.demo.elasticsearch.entity.User;
+import org.elasticsearch.index.query.QueryBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,13 @@ public class App {
 //        String json = repo.get("user", "user", "1");
 //        User user = JSON.parseObject(json, User.class);
 //        System.out.println(user.getName());
-        repo.search("user", "user");
+        // 精确匹配
+        repo.search("user", "user",
+                QueryBuilders.termQuery("id", "1"));
+        System.out.println();
+        // 分词匹配
+        repo.search("user", "user",
+                QueryBuilders.matchQuery("accounts.name", "招商"));
         repo.close();
     }
 

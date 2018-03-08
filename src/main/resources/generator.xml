@@ -15,7 +15,7 @@
         <!--<jdbcConnection userId="zhsun5" password="123456" driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/study"/>-->
         <jdbcConnection userId="root" password="root" driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://172.31.6.48:3306/hiseemz"/>
+                        connectionURL="jdbc:mysql://172.31.6.48:3306/hiseecas"/>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
@@ -34,7 +34,9 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
-        <table schema="hiseemz" tableName="t_mz_file_tag" domainObjectName="FileTag" enableCountByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false" />
+        <table schema="hiseecas" tableName="t_cas_product" domainObjectName="Product" enableCountByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table schema="hiseecas" tableName="t_cas_user" domainObjectName="User" enableCountByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false"/>
     </context>
 </generatorConfiguration>

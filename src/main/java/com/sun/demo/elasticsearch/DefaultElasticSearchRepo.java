@@ -16,6 +16,7 @@ import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -90,13 +91,11 @@ public class DefaultElasticSearchRepo {
         System.out.println(response);
     }
 
-    public String search(String index, String type){
+    public String search(String index, String type, QueryBuilder query){
         SearchRequest searchRequest = new SearchRequest(index);
         searchRequest.types(type);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.query(QueryBuilders.termQuery("id", "1"));
-        sourceBuilder.from(0);
-        sourceBuilder.size(5);
+        sourceBuilder.query(query).from(0).size(5);
         searchRequest.source(sourceBuilder);
         try {
             SearchResponse searchResponse = client.search(searchRequest);

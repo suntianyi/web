@@ -23,6 +23,11 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/file")
 @Api(value = "文件管理")
 public class FileController {
+    @RequestMapping(value = "/sayHello", method = RequestMethod.GET)
+    @ResponseBody
+    public String sayHello(){
+        return "Hello, Sun";
+    }
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody

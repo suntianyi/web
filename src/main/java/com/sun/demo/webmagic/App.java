@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -19,7 +20,7 @@ public class App {
         String path = "D:/trash/" + name + ".txt";
         PrintWriter printWriter = new PrintWriter(new FileWriter(path, true));
         String url = "https://www.xxbiquge.com/0_62/";
-        String response = HttpClient.sendGet(url, "");
+        String response = HttpClient.sendGet(url, new HashMap<>());
         List<Chapter> chapterList = getChapterList(response);
         int i = 0;
         for (Chapter chapter : chapterList){
@@ -51,14 +52,14 @@ public class App {
     public static String getContent(String url) {
         String response;
         try {
-            response = HttpClient.sendGet(url, "");
+            response = HttpClient.sendGet(url, new HashMap<>());
         } catch (Exception e){
             try {
                 TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
-            response = HttpClient.sendGet(url, "");
+            response = HttpClient.sendGet(url, new HashMap<>());
         }
         Pattern p = Pattern.compile("<div id=\"content\">(.*?)</div>");
         Matcher m = p.matcher(response);

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -23,7 +24,7 @@ import java.util.*;
 public class ZabbixUtil {
     private static final Logger logger = LoggerFactory.getLogger(ZabbixUtil.class);
 
-    private String ZABBIX_URL = "http://192.168.170.129:9090/zabbix/api_jsonrpc.php";
+    private String ZABBIX_URL = "http://172.31.6.77:10080/zabbix/api_jsonrpc.php";
     private String ZABBIX_UNAME = "Admin";
     private String ZABBIX_UPWD = "zabbix";
 
@@ -72,9 +73,50 @@ public class ZabbixUtil {
                 .paramEntry("search", search)
                 .build();
         logger.info(String.format("queryItems >>>> request:%s", request.toString()));
-        JSONObject json = call(request);
-        logger.info(String.format("queryItems <<<< response:%s", json.toJSONString()));
-        return json;
+        JSONObject response = call(request);
+        logger.info(String.format("queryItems <<<< response:%s", response.toJSONString()));
+        return response;
+    }
+
+    /**
+     * 查询主机历史监控信息
+     * @param hostid
+     * @return
+     */
+    public JSONObject queryHistoryByHost(String hostid){
+        List<String> hostids = new ArrayList<>(1);
+        hostids.add(hostid);
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder().method("history.get")
+                .paramEntry("output", "extend")
+                .paramEntry("history", 0)
+                .paramEntry("hostids", hostids)
+                .paramEntry("sortfield", "clock")
+                .paramEntry("sortorder", "DESC")
+                .build();
+        logger.info(String.format("queryHistoryByHosts >>>> request:%s", request.toString()));
+        JSONObject response = call(request);
+        logger.info(String.format("queryHistoryByHosts <<<< response:%s", response.toJSONString()));
+        return response;
+    }
+
+    /**
+     * 根据itemids查询历史数据
+     * @param itemids
+     * @return
+     */
+    public JSONObject queryHistoryByItems(List<String> itemids){
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder().method("history.get")
+                .paramEntry("output", "extend")
+                .paramEntry("history", 0)
+                .paramEntry("itemids", itemids)
+                .paramEntry("sortfield", "clock")
+                .paramEntry("sortorder", "DESC")
+                .paramEntry("limit", 10)
+                .build();
+        logger.info(String.format("queryHistoryByItems >>>> request:%s", request.toString()));
+        JSONObject response = call(request);
+        logger.info(String.format("queryHistoryByItems <<<< response:%s", response.toJSONString()));
+        return response;
     }
 
     /**
@@ -93,9 +135,9 @@ public class ZabbixUtil {
                     .paramEntry("filter", search)
                     .build();
             logger.info(String.format("queryHost >>>> request:%s", request.toString()));
-            JSONObject json = call(request);
-            logger.info(String.format("queryHost <<<< response:%s", json.toJSONString()));
-            return json;
+            JSONObject response = call(request);
+            logger.info(String.format("queryHost <<<< response:%s", response.toJSONString()));
+            return response;
         }
         return null;
     }
@@ -117,9 +159,9 @@ public class ZabbixUtil {
                 .paramEntry("filter", search)
                 .build();
         logger.info(String.format("queryApplications >>>> request:%s", request.toString()));
-        JSONObject json = call(request);
-        logger.info(String.format("queryApplications <<<< response:%s", json.toJSONString()));
-        return json;
+        JSONObject response = call(request);
+        logger.info(String.format("queryApplications <<<< response:%s", response.toJSONString()));
+        return response;
     }
 
     /**
@@ -135,9 +177,9 @@ public class ZabbixUtil {
                 .paramEntry("hostids", hostId)
                 .build();
         logger.info(String.format("queryHostInterface >>>> request:%s", request.toString()));
-        JSONObject json = call(request);
-        logger.info(String.format("queryHostInterface <<<< response:%s", json.toJSONString()));
-        return json;
+        JSONObject response = call(request);
+        logger.info(String.format("queryHostInterface <<<< response:%s", response.toJSONString()));
+        return response;
     }
 
 
@@ -146,7 +188,7 @@ public class ZabbixUtil {
             request.setAuth(auth);
         }
         try {
-            HttpUriRequest httpRequest = org.apache.http.client.methods.RequestBuilder
+            HttpUriRequest httpRequest = RequestBuilder
                     .post().setUri(new URI(ZABBIX_URL))
                     .addHeader("Content-Type", "application/json-rpc")
                     .setEntity(new StringEntity(JSON.toJSONString(request), "utf-8"))
@@ -217,9 +259,9 @@ public class ZabbixUtil {
                     .paramEntry("selectHosts", new String[]{"host", "hostid"});//
             ZabbixRequest request = builder.build();
             logger.info(String.format("queryItemsByKeysHostids >>>> request:%s", request.toString()));
-            JSONObject json = call(request);
-            logger.info(String.format("queryItemsByKeysHostids <<<< response:%s", json.toJSONString()));
-            return json;
+            JSONObject response = call(request);
+            logger.info(String.format("queryItemsByKeysHostids <<<< response:%s", response.toJSONString()));
+            return response;
         } catch (Exception e) {
             logger.warn("查询监控信息失败！", e);
         }
@@ -233,7 +275,7 @@ public class ZabbixUtil {
      * @param outputs
      * @return
      */
-    public JSONObject queryTemplateItemsByKeys(Collection<String> monitorKeys, String... outputs) {
+    public JSONObject queryTemplateItemsByKeys(List<String> monitorKeys, String... outputs) {
         try {
             JSONObject filter = new JSONObject();
             filter.put("key_", monitorKeys);
@@ -243,9 +285,9 @@ public class ZabbixUtil {
                     .paramEntry("templated", true);//
             ZabbixRequest request = builder.build();
             logger.info(String.format("queryTemplateItemsByKeys >>>> request:%s", request.toString()));
-            JSONObject json = call(request);
-            logger.info(String.format("queryTemplateItemsByKeys <<<< response:%s", json.toJSONString()));
-            return json;
+            JSONObject response = call(request);
+            logger.info(String.format("queryTemplateItemsByKeys <<<< response:%s", response.toJSONString()));
+            return response;
         } catch (Exception e) {
             logger.error("查询监控信息失败！", e);
         }
@@ -280,9 +322,9 @@ public class ZabbixUtil {
                     .paramEntry("output", ArrayUtils.isEmpty(outputs) ? "extend" : outputs)//
                     .build();
             logger.info(String.format("queryHostsByHostnames >>>> request:%s", request.toString()));
-            JSONObject json = call(request);
-            logger.info(String.format("queryHostsByHostnames <<<< response:%s", json.toJSONString()));
-            return json;
+            JSONObject response = call(request);
+            logger.info(String.format("queryHostsByHostnames <<<< response:%s", response.toJSONString()));
+            return response;
         } catch (Exception e) {
             logger.error("host不存在：" + e.getMessage(), e);
         }
@@ -322,8 +364,8 @@ public class ZabbixUtil {
      * @param outputs
      * @return
      */
-    public JSONObject queryTemplateByItemids(List<String> itemids, Collection<String> hostids, String... outputs) {
-        JSONObject response = null;
+    public JSONObject queryTemplateByItemids(List<String> itemids, List<String> hostids, String... outputs) {
+        JSONObject response;
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder().method("template.get")
                 .paramEntry("itemids", itemids)
                 .paramEntry("hostids", hostids)
@@ -352,9 +394,9 @@ public class ZabbixUtil {
                     .paramEntry("output", ArrayUtils.isEmpty(outputs) ? "extend" : outputs)//
                     .build();
             logger.info(String.format("queryInterfacesByHostnames >>>> request:%s", request.toString()));
-            JSONObject json = call(request);
-            logger.info(String.format("queryInterfacesByHostnames <<<< response:%s", json.toJSONString()));
-            return json;
+            JSONObject response = call(request);
+            logger.info(String.format("queryInterfacesByHostnames <<<< response:%s", response.toJSONString()));
+            return response;
         } catch (Exception e) {
             logger.error("host ip不存在：" + e.getMessage(), e);
         }
