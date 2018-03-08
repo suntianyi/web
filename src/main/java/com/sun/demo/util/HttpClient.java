@@ -1,10 +1,13 @@
 package com.sun.demo.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
@@ -94,19 +97,59 @@ public class HttpClient {
         return result.toString();
     }
 
+    public static String sendPost(String url, String json) {
+        String result = "";
+        BufferedReader reader = null;
+        try {
+            URL realUrl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Charset", "UTF-8");
+            // 设置文件类型:
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("accept", "application/json");
+            conn.setRequestProperty("Content-Length", String.valueOf(json.length()));
+            OutputStream outwritestream = conn.getOutputStream();
+            outwritestream.write(json.getBytes());
+            outwritestream.flush();
+            outwritestream.close();
+            if (conn.getResponseCode() == 200) {
+                reader = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+                result = reader.readLine();
+            }
+        } catch (Exception e) {
+            System.out.println("发送 POST 请求出现异常！" + e);
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
 
     private static URL createURL(String url, Map<String, Object> param) throws MalformedURLException {
         StringBuilder sb = new StringBuilder(url);
-        if (param.size() != 0){
+        if (param.size() != 0) {
             sb.append("?");
-            for (String key: param.keySet()){
+            for (String key : param.keySet()) {
                 sb.append(key);
                 sb.append("=");
                 sb.append(param.get(key));
                 sb.append("&");
             }
         }
-        return new URL(sb.substring(0, sb.length()-1));
+        return new URL(sb.substring(0, sb.length() - 1));
     }
 }
 
