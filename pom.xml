@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.7.RELEASE</version>
+        <version>2.0.0.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>4.3.9.RELEASE</version>
+            <version>5.0.4.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version> 1.2.39</version>
+            <version> 1.2.41</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -72,13 +72,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
-            <version>1.5.4.RELEASE</version>
+            <version>2.0.0.RELEASE</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>4.3.12.RELEASE</version>
+            <version>5.0.4.RELEASE</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -137,6 +137,11 @@
             <artifactId>hadoop-common</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>23.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -149,6 +154,18 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

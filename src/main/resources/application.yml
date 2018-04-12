@@ -5,10 +5,19 @@ spring:
     prefixPath: /node/web3/
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/study
+    url: jdbc:mysql://192.168.90.10:3306/study?useSSL=true
     username: zhsun5
     password: 123456
-
+  redis:
+    host: 192.168.59.26
+    port: 6381
+    #lettuce客户端
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1ms
+        min-idle: 0
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   config-location: classpath:mybatis-config.xml

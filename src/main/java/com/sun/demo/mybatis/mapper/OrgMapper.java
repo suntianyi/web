@@ -51,4 +51,5 @@ public interface OrgMapper {
     int updateByPrimaryKey(Org record);
 
     List<Org> querySubOrg(int id);
+
 }
