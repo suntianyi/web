@@ -101,14 +101,16 @@ public class ZabbixUtil {
 
     /**
      * 根据itemids查询历史数据
-     * @param itemids
+     * @param itemId
      * @return
      */
-    public JSONObject queryHistoryByItems(List<String> itemids){
+    public JSONObject queryHistoryByItems(String itemId, int type){
+        List<String> itemIds = new ArrayList<>();
+        itemIds.add(itemId);
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder().method("history.get")
                 .paramEntry("output", "extend")
-                .paramEntry("history", 0)
-                .paramEntry("itemids", itemids)
+                .paramEntry("history", type)
+                .paramEntry("itemids", itemIds)
                 .paramEntry("sortfield", "clock")
                 .paramEntry("sortorder", "DESC")
                 .paramEntry("limit", 10)
