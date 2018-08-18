@@ -22,3 +22,5 @@ mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   config-location: classpath:mybatis-config.xml
   type-aliases-package: com.sun.demo.mybatis.entity
+server:
+  port: 18080

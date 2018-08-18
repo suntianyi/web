@@ -1,5 +1,7 @@
 package com.sun.demo.zabbix;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,16 +10,14 @@ public class App {
         ZabbixUtil zabbixUtil = new ZabbixUtil();
         zabbixUtil.queryHost("Zabbix server");
 
-        zabbixUtil.queryItems("Zabbix server", "agent.version");
+        JSONObject object = zabbixUtil.queryItems("Zabbix server", "vm.memory.size[available]");
 
-        zabbixUtil.queryHostInterface("10258");
+//
+//        zabbixUtil.queryHostInterface("10259");
+//
+//        zabbixUtil.queryApplications("10258", "CPU");
 
-        zabbixUtil.queryApplications("10258", "CPU");
-
-//        zabbixUtil.queryHistoryByHost("10258");
-        List<String> itemids = new ArrayList<>(1);
-        itemids.add("28394");
-        zabbixUtil.queryHistoryByItems(itemids);
+        zabbixUtil.queryHistoryByItems("28443", 3);
 
     }
 }

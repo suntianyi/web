@@ -14,7 +14,7 @@ public class App {
 //            String result = zkClient.create("/zktest", "admin".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 //            zkClient.setData("/zktest", "aaa".getBytes(), -1);
 //            zkClient.delete("/zktest", -1);
-            String result = new String(zkClient.getData("/zktest", false, null));
+            String result = new String(zkClient.getData("/hiseeJK/database/DataSourcePassword", false, null));
 
             System.out.println(result);
         } catch (KeeperException | InterruptedException e) {

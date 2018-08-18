@@ -20,17 +20,16 @@ public class App {
         String path = "D:/trash/" + name + ".txt";
         PrintWriter printWriter = new PrintWriter(new FileWriter(path, true));
         String url = "https://www.xxbiquge.com/0_62/";
-        String response = HttpClient.sendGet(url, new HashMap<>());
+        String response = HttpClient.sendGet(url, null);
         List<Chapter> chapterList = getChapterList(response);
-        int i = 0;
-        for (Chapter chapter : chapterList){
+        int progress = 0;
+        for (Chapter chapter : chapterList) {
             String content = getContent(chapter.getUrl());
             content = content.replace("&nbsp;&nbsp;&nbsp;&nbsp;", "").replace("<br /><br />", "'");
             printWriter.println(chapter.getTitle());
             printWriter.println(content);
-            System.out.print("已完成：" + 100*i/chapterList.size() + "%");
-            System.out.print("\r");
-            i++;
+            System.out.print("已完成：" + 100 * progress / chapterList.size() + "%" + "\r");
+            progress++;
         }
         printWriter.close();
     }
@@ -40,7 +39,7 @@ public class App {
         Pattern p = Pattern.compile("<dd><a href=\"(.*?)\">(.*?)</a></dd>");
         Matcher m = p.matcher(response);
         List<Chapter> chapterList = new ArrayList<>();
-        while (m.find()){
+        while (m.find()) {
             Chapter chapter = new Chapter();
             chapter.setUrl(baseUrl + m.group(1));
             chapter.setTitle(m.group(2));
@@ -49,34 +48,26 @@ public class App {
         return chapterList;
     }
 
-    public static String getContent(String url) {
+    private static String getContent(String url) {
         String response;
         try {
-            response = HttpClient.sendGet(url, new HashMap<>());
-        } catch (Exception e){
+            response = HttpClient.sendGet(url, null);
+        } catch (Exception e) {
             try {
                 TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
-            response = HttpClient.sendGet(url, new HashMap<>());
+            response = HttpClient.sendGet(url, null);
         }
         Pattern p = Pattern.compile("<div id=\"content\">(.*?)</div>");
         Matcher m = p.matcher(response);
-        if(m.find()){
+        if (m.find()) {
             return m.group(1);
         }
         return "";
     }
-
-    public static void printProgress(int size){
-        for (int i = 1; i <= size; i++) {
-
-        }
-        System.out.println();
-    }
 }
-
 
 
 class Chapter {

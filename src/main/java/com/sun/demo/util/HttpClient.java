@@ -140,17 +140,72 @@ public class HttpClient {
 
 
     private static URL createURL(String url, Map<String, Object> param) throws MalformedURLException {
+        if (param == null || param.size() == 0){
+            return new URL(url);
+        }
         StringBuilder sb = new StringBuilder(url);
-        if (param.size() != 0) {
-            sb.append("?");
-            for (String key : param.keySet()) {
-                sb.append(key);
-                sb.append("=");
-                sb.append(param.get(key));
-                sb.append("&");
-            }
+        sb.append("?");
+        for (String key : param.keySet()) {
+            sb.append(key);
+            sb.append("=");
+            sb.append(param.get(key));
+            sb.append("&");
         }
         return new URL(sb.substring(0, sb.length() - 1));
+    }
+
+    // 表单提交
+    public static String sendForm(String url, Map<String, String> params) {
+        // 构建请求参数
+        StringBuilder sb = new StringBuilder();
+        if (params != null) {
+            for (Map.Entry<String, String> e : params.entrySet()) {
+                sb.append(e.getKey());
+                sb.append("=");
+                sb.append(e.getValue());
+                sb.append("&");
+            }
+            sb.substring(0, sb.length() - 1);
+        }
+        URL u;
+        HttpURLConnection con = null;
+        try {
+            u = new URL(url);
+            con = (HttpURLConnection) u.openConnection();
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            con.setDoInput(true);
+            con.setUseCaches(false);
+            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36");
+            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream(), "UTF-8");
+            con.getHeaderFields().forEach((k, v) -> System.out.println(k + ": " + v));
+            osw.write(sb.toString());
+            osw.flush();
+            osw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                con.disconnect();
+            }
+        }
+
+        // 读取返回内容
+        StringBuilder buffer = new StringBuilder();
+        try {
+            //一定要有返回值，否则无法把请求发送给server端。
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                buffer.append(temp);
+                buffer.append("\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return buffer.toString();
     }
 }
 

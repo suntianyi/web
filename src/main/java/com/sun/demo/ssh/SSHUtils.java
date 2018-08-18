@@ -8,6 +8,8 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 
 /**
  * @author zhsun5@iflytek.com
@@ -34,6 +36,16 @@ public class SSHUtils {
     public static String execCommandByJSch(DestHost destHost, String command) throws IOException, JSchException {
         return execCommandByJSch(destHost, command, ENCODING);
     }
+
+    public static void execCommandByJSch(DestHost destHost, List<String> commands) throws IOException, JSchException {
+        Session session = getJSchSession(destHost);
+        for (String command : commands) {
+            String result = execCommandByJSch(session, command);
+            System.out.println(result);
+        }
+        session.disconnect();
+    }
+
 
     public static String execCommandByJSch(DestHost destHost, String command, String resultEncoding) throws IOException, JSchException {
         Session session = getJSchSession(destHost);

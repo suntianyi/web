@@ -19,7 +19,7 @@ public class ZookeeperClient {
     private final CountDownLatch connectedSignal = new CountDownLatch(1);
 
     @Value("${spring.zookeeper.host}")
-    private String host = "127.0.0.1:2181";
+    private String host = "172.31.6.48:2181";
     @Value("${spring.zookeeper.timeout}")
     private String timeout = "5000";
 
